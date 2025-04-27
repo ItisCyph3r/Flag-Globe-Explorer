@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" class="light" style="color-scheme: light;">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flag Globe Explorer</title>
+    <meta name="description" content="Learn country flags by continent with Flag Globe Explorer" />
+    <meta name="author" content="Samuel Momoh" />
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4f46e5" />
+    <!-- <meta name="apple-mobile-web-app-capable" content="yes" /> -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Flag Explorer" />
+    <link rel="manifest" href="/manifest.json" />
+    
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
+
+    <meta property="og:title" content="Flag Globe Explorer" />
+    <meta property="og:description" content="Learn country flags by continent with Flag Globe Explorer" />
+    <meta property="og:type" content="website" />
+    <!-- <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" /> -->
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- <meta name="twitter:site" content="@lovable_dev" /> -->
+    <!-- <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" /> -->
+    
+    <script>
+      // Initialize theme from local storage or system preference
+      const theme = localStorage.getItem('theme') || 'system';
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      const resolvedTheme = theme === 'system' ? systemTheme : theme;
+      
+      // Apply theme to HTML element
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(resolvedTheme);
+      document.documentElement.style.colorScheme = resolvedTheme;
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <script type="module" src="/src/main.tsx"></script>
+    <noscript>
+      <div style="padding: 2rem; text-align: center; font-family: sans-serif;">
+        <h1>JavaScript Required</h1>
+        <p>Flag Globe Explorer requires JavaScript to run. Please enable JavaScript in your browser settings.</p>
+      </div>
+    </noscript>
+  </body>
+</html>
