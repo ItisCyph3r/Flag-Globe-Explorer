@@ -256,7 +256,7 @@ export default function HomePage({ session, loading }: HomePageProps) {
         </div>
 
         <footer className="mt-8 text-center text-muted-foreground text-sm z-10">
-          <p>Created with ❤️ | Flag images from flagcdn.com</p>
+          <p>Created with ❤️ | Samuel Momoh</p>
         </footer>
       </div>
     </div>
