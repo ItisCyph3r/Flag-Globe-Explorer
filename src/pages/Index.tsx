@@ -8,6 +8,7 @@ import QuizResults from '@/components/QuizResults';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Loader2 } from "lucide-react";
+import InstallPWA from "@/components/InstallPWA";
 import "../styles/bubbly-background.css";
 
 // Main Quiz component that changes based on quiz state
@@ -161,7 +162,8 @@ const Index = () => {
         
         <div className="container container-tight py-8 relative z-10">
           <header className="text-center mb-8 relative">
-            <div className="absolute right-0 top-0">
+            <div className="absolute right-0 top-0 flex items-center gap-2">
+              <InstallPWA />
               <ThemeToggle />
             </div>
             <h1 className="text-4xl font-extrabold tracking-tight mb-2">
