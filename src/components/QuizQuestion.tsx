@@ -86,7 +86,7 @@ const QuizQuestion = () => {
           
           <Button 
             onClick={handleNextQuestion}
-            className="bg-app-indigo hover:bg-app-indigo/90"
+            className="bg-app-indigo hover:bg-app-indigo/90 text-white"
             size="lg"
             disabled={loadingNext}
           >
