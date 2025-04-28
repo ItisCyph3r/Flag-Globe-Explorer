@@ -1,4 +1,3 @@
-
 import { Country } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -38,8 +37,8 @@ const FlagCard = ({
         "transition-all duration-300 transform",
         onClick && !disabled && "cursor-pointer hover:translate-y-[-4px]",
         selected && "ring-2 ring-offset-2",
-        isCorrectAnswer && "ring-green-500 bg-green-50",
-        isIncorrectAnswer && "ring-red-500 bg-red-50",
+        isCorrectAnswer && "ring-green-700 bg-green-200 ring-4",
+        isIncorrectAnswer && "ring-red-700 bg-red-200",
         disabled && "opacity-70 pointer-events-none",
         sizeClasses[size]
       )}
@@ -50,7 +49,7 @@ const FlagCard = ({
           <img 
             src={country.flagUrl} 
             alt={`Flag of ${country.name}`}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
             loading="lazy"
           />
         </div>
