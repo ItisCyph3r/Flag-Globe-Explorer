@@ -1,4 +1,3 @@
-
 import { useQuiz } from '@/contexts/QuizContext';
 import { Button } from './ui/button';
 
@@ -16,25 +15,25 @@ const QuizResults = () => {
       <div className="text-center">
         <h2 className="text-3xl font-bold mb-6">Quiz Results</h2>
         
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-card rounded-lg shadow-lg p-6 border">
           <div className="mb-6">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-gray-500">Score</span>
-              <span className="font-bold text-2xl">{state.score}</span>
+              <span className="text-muted-foreground">Score</span>
+              <span className="font-bold text-2xl text-foreground">{state.score}</span>
             </div>
             
             <div className="flex justify-between items-center mb-2">
-              <span className="text-gray-500">Questions</span>
-              <span>{totalQuestions}</span>
+              <span className="text-muted-foreground">Questions</span>
+              <span className="text-foreground">{totalQuestions}</span>
             </div>
             
             <div className="flex justify-between items-center">
-              <span className="text-gray-500">Accuracy</span>
-              <span>{accuracy}%</span>
+              <span className="text-muted-foreground">Accuracy</span>
+              <span className="text-foreground">{accuracy}%</span>
             </div>
           </div>
           
-          <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-4 bg-muted rounded-full overflow-hidden">
             <div 
               className="h-full bg-app-indigo"
               style={{ width: `${accuracy}%` }}
