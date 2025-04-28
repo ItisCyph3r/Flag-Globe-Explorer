@@ -225,8 +225,8 @@ export default function HomePage({ session, loading }: HomePageProps) {
         <ThemeToggle />
       </div>
       
-      <div className="container container-tight max-w-md mx-auto px-4 flex flex-col items-center z-10 mt-16">
-        <header className="text-center mb-8 w-full">
+      <div className="container container-tight max-w-md mx-auto px-4 flex flex-col items-center z-10">
+        <header className="text-center my-8 w-full">
           <div className="flex justify-between items-center mb-4">
             <div className="w-8" /> {/* Spacer for balance */}
             <h1 className="text-4xl font-extrabold tracking-tight">
