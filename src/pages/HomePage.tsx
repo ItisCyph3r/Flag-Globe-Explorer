@@ -220,14 +220,13 @@ export default function HomePage({ session, loading }: HomePageProps) {
         <div className="bubble bubble-enhanced"></div>
       </div>
       
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <InstallPWA />
+        <ThemeToggle />
+      </div>
+      
       <div className="container container-tight max-w-md mx-auto px-4 flex flex-col items-center z-10">
-        <header className="text-center w-full">
-          <div className="flex justify-end mb-4">
-            <div className="flex items-center gap-2">
-              <InstallPWA />
-              <ThemeToggle />
-            </div>
-          </div>
+        <header className="text-center mb-8 w-full mt-0">
           <div className="flex justify-between items-center mb-4">
             <div className="w-8" /> {/* Spacer for balance */}
             <h1 className="text-4xl font-extrabold tracking-tight">

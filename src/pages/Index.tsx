@@ -162,14 +162,14 @@ const Index = () => {
         
         <div className="container container-tight py-8 relative z-10">
           <header className="text-center mb-8 relative">
-            <div className="absolute right-0 top-0 flex items-center gap-2">
+            <div className=" right-0 top-0 flex justify-end items-center gap-2">
               <InstallPWA />
               <ThemeToggle />
             </div>
-            <h1 className="text-4xl font-extrabold tracking-tight mb-2">
+            <h1 className="text-4xl font-extrabold tracking-tight mb-2 mt-4">
               <span className="text-primary">Flag</span> Globe Explorer
             </h1>
-            <p className="text-muted-foreground">Learn flags from around the world</p>
+            <p className="text-muted-foreground">Learn flags from arouncscsd the world</p>
           </header>
           
           <main className="bg-card bg-opacity-90 backdrop-blur-sm rounded-lg border p-6">
