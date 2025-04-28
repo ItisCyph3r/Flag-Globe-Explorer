@@ -44,12 +44,12 @@ const FlagCard = ({
       )}
       onClick={!disabled ? onClick : undefined}
     >
-      <div className="relative w-full h-full flex flex-col">
-        <div className="flex-1 overflow-hidden">
+      <div className="relative w-full h-full flex flex-col items-center justify-center bg-white">
+        <div className="w-full h-full flex items-center justify-center p-2">
           <img 
             src={country.flagUrl} 
             alt={`Flag of ${country.name}`}
-            className="w-full h-full object-contain"
+            className="max-w-full max-h-full w-auto h-auto object-contain"
             loading="lazy"
           />
         </div>
