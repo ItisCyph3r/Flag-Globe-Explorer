@@ -17,6 +17,9 @@ export interface QuizState {
   history: QuizHistory[];
   status: 'idle' | 'loading' | 'active' | 'feedback' | 'completed';
   loading: boolean;
+  usedCountries: string[]; // Track country codes that have been shown
+  gameMode: 'multiple-choice' | 'spelling';
+  totalCountries: number;
 }
 
 export interface Question {

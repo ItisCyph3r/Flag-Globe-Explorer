@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useEffect, useReducer, useState } from 'react';
 import { Continent, Country, Question, QuizHistory, QuizState } from '@/lib/types';
-import { createQuestion, fetchAllCountries } from '@/lib/country-data';
+import { createQuestion, fetchAllCountries, getCountriesByContinent } from '@/lib/country-data';
 import { loadStats, saveStats, updateStats } from '@/lib/storage-service';
 import { toast } from '@/components/ui/use-toast';
 
 // Define actions for the reducer
 type QuizAction =
-  | { type: 'START_QUIZ'; payload: { continent: Continent } }
-  | { type: 'SET_QUESTION'; payload: { question: Question | null } }
+  | { type: 'START_QUIZ'; payload: { continent: Continent; gameMode?: 'multiple-choice' | 'spelling'; totalCountries: number } }
+  | { type: 'SET_QUESTION'; payload: { question: Question | null; usedCountries?: string[] } }
   | { type: 'SUBMIT_ANSWER'; payload: { answer: Country } }
   | { type: 'NEXT_QUESTION' }
   | { type: 'END_QUIZ' }
@@ -22,28 +22,34 @@ const initialQuizState: QuizState = {
   history: [],
   status: 'idle',
   loading: false,
+  usedCountries: [],
+  gameMode: 'multiple-choice',
+  totalCountries: 0,
 };
 
 // Reducer function
 function quizReducer(state: QuizState, action: QuizAction): QuizState {
   switch (action.type) {
     case 'START_QUIZ': {
-      const { continent } = action.payload;
+      const { continent, gameMode, totalCountries } = action.payload;
       return {
         ...initialQuizState,
         continent,
+        gameMode,
+        totalCountries,
         status: 'loading',
         loading: true,
       };
     }
     
     case 'SET_QUESTION': {
-      const { question } = action.payload;
+      const { question, usedCountries } = action.payload;
       return {
         ...state,
         currentQuestion: question,
         status: question ? 'active' : 'idle',
         loading: false,
+        usedCountries: usedCountries || state.usedCountries,
       };
     }
     
@@ -98,7 +104,7 @@ function quizReducer(state: QuizState, action: QuizAction): QuizState {
 // Create context
 interface QuizContextType {
   state: QuizState;
-  startQuiz: (continent: Continent) => Promise<void>;
+  startQuiz: (continent: Continent, gameMode?: 'multiple-choice' | 'spelling') => Promise<void>;
   submitAnswer: (answer: Country) => void;
   nextQuestion: () => Promise<void>;
   endQuiz: () => void;
@@ -168,9 +174,13 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   }, [state.history, state.status, state.continent, userStats, state.score]);
   
   // Context methods
-  const startQuiz = async (continent: Continent) => {
+  const startQuiz = async (continent: Continent, gameMode: 'multiple-choice' | 'spelling' = 'multiple-choice') => {
     try {
-      dispatch({ type: 'START_QUIZ', payload: { continent } });
+      // Get total number of countries for the continent
+      const continentCountries = await getCountriesByContinent(continent);
+      const totalCountries = continentCountries.length;
+      
+      dispatch({ type: 'START_QUIZ', payload: { continent, gameMode, totalCountries } });
       const question = await createQuestion(continent);
       dispatch({ type: 'SET_QUESTION', payload: { question } });
     } catch (error) {
@@ -194,7 +204,38 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
       
       dispatch({ type: 'NEXT_QUESTION' });
       const question = await createQuestion(state.continent);
-      dispatch({ type: 'SET_QUESTION', payload: { question } });
+      
+      if (!question) {
+        dispatch({ type: 'END_QUIZ' });
+        return;
+      }
+      
+      // Check if we've shown all countries
+      const continentCountries = await getCountriesByContinent(state.continent);
+      const allCountriesShown = state.usedCountries.length >= continentCountries.length;
+      
+      if (allCountriesShown) {
+        dispatch({ type: 'END_QUIZ' });
+        toast({
+          title: "Quiz Complete!",
+          description: "You've seen all the countries in this continent!",
+          variant: "default",
+        });
+        return;
+      }
+      
+      // Add the target country to used countries if not already there
+      if (!state.usedCountries.includes(question.targetCountry.code)) {
+        dispatch({ 
+          type: 'SET_QUESTION', 
+          payload: { 
+            question,
+            usedCountries: [...state.usedCountries, question.targetCountry.code]
+          } 
+        });
+      } else {
+        dispatch({ type: 'SET_QUESTION', payload: { question } });
+      }
     } catch (error) {
       console.error('Error getting next question:', error);
       toast({

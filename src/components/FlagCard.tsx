@@ -44,7 +44,7 @@ const FlagCard = ({
       )}
       onClick={!disabled ? onClick : undefined}
     >
-      <div className="relative w-full h-full flex flex-col items-center justify-center bg-white border border-gray-200 shadow-sm">
+      <div className="relative w-full h-full flex flex-col items-center justify-center  border border-gray- shadow-sm">
         <div className="w-full h-full flex items-center justify-center p-2">
           <img 
             src={country.flagUrl} 

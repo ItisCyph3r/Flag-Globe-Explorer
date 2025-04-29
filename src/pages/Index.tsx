@@ -4,6 +4,7 @@ import { continents } from '@/lib/country-data';
 import { QuizProvider, useQuiz } from '@/contexts/QuizContext';
 import ContinentCard from '@/components/ContinentCard';
 import QuizQuestion from '@/components/QuizQuestion';
+import SpellingQuizQuestion from '@/components/SpellingQuizQuestion';
 import QuizResults from '@/components/QuizResults';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -14,6 +15,7 @@ import "../styles/bubbly-background.css";
 // Main Quiz component that changes based on quiz state
 const Quiz = () => {
   const { state, resetQuiz, endQuiz, startQuiz, countriesLoaded } = useQuiz();
+  const [selectedGameMode, setSelectedGameMode] = useState<'multiple-choice' | 'spelling'>('multiple-choice');
   
   console.log("Quiz render - state:", state.status, "loading:", state.loading);
   
@@ -43,39 +45,99 @@ const Quiz = () => {
   
   if (state.status === 'idle') {
     return (
-      <div className="text-center">
-        <h2 className="text-3xl font-bold mb-2">Select a continent to begin</h2>
-        <p className="text-gray-600 mb-8">Test your knowledge of country flags around the world</p>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {continents.map((continent) => (
-            <ContinentCard 
-              key={continent} 
-              continent={continent} 
-              onSelect={async (continent) => {
-                try {
-                  console.log("Starting quiz for continent:", continent);
-                  resetQuiz();
-                  await startQuiz(continent);
-                } catch (error) {
-                  console.error("Error starting quiz:", error);
-                }
-              }}
-            />
-          ))}
+      <div className="container mx-auto p-4">
+        <div className="flex flex-col items-center gap-8">
+          <h1 className="text-3xl font-bold">Flag Globe Explorer</h1>
+          
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-col items-center gap-4">
+              <h2 className="text-xl font-semibold">Select Game Mode</h2>
+              <div className="flex gap-4">
+                <Button
+                  variant={selectedGameMode === 'multiple-choice' ? 'default' : 'outline'}
+                  onClick={() => setSelectedGameMode('multiple-choice')}
+                  className="min-w-[150px]"
+                >
+                  Multiple Choice
+                </Button>
+                <Button
+                  variant={selectedGameMode === 'spelling' ? 'default' : 'outline'}
+                  onClick={() => setSelectedGameMode('spelling')}
+                  className="min-w-[150px]"
+                >
+                  Spelling
+                </Button>
+              </div>
+            </div>
+            
+            <div className="flex flex-col items-center gap-4">
+              <h2 className="text-xl font-semibold">Select Continent</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {continents.map((continent) => (
+                  <ContinentCard 
+                    key={continent} 
+                    continent={continent} 
+                    onSelect={async (continent) => {
+                      try {
+                        console.log("Starting quiz for continent:", continent);
+                        resetQuiz();
+                        await startQuiz(continent, selectedGameMode);
+                      } catch (error) {
+                        console.error("Error starting quiz:", error);
+                      }
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
   
   if (state.status === 'active' || state.status === 'feedback') {
+    const progress = (state.usedCountries.length / state.totalCountries) * 100;
+    const remainingCountries = state.totalCountries - state.usedCountries.length;
+
     return (
-      <div>
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">{state.continent} Quiz</h2>
-          <Button 
-            variant="outline" 
-            size="sm"
+      <div className="container mx-auto p-4">
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-2 w-full max-w-md">
+            <h2 className="text-xl font-bold">{state.continent} Quiz</h2>
+            
+            {/* Progress Bar */}
+            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-primary transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+
+            {/* Progress Stats */}
+            <div className="flex justify-between w-full text-sm text-muted-foreground">
+              <span>{state.usedCountries.length}/{state.totalCountries} countries</span>
+              <span>{remainingCountries} remaining</span>
+              <span>{Math.round(progress)}% complete</span>
+            </div>
+
+            {/* Visual Indicator */}
+            <div className="flex gap-1">
+              {Array.from({ length: state.totalCountries }).map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full ${
+                    index < state.usedCountries.length 
+                      ? 'bg-primary' 
+                      : 'bg-muted'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          <Button
+            variant="outline"
             onClick={() => {
               if (window.confirm('Are you sure you want to end this quiz?')) {
                 endQuiz();
@@ -84,9 +146,12 @@ const Quiz = () => {
           >
             End Quiz
           </Button>
+          {state.gameMode === 'multiple-choice' ? (
+            <QuizQuestion />
+          ) : (
+            <SpellingQuizQuestion />
+          )}
         </div>
-        
-        <QuizQuestion />
       </div>
     );
   }
@@ -169,7 +234,7 @@ const Index = () => {
             <h1 className="text-4xl font-extrabold tracking-tight mb-2 mt-4">
               <span className="text-primary">Flag</span> Globe Explorer
             </h1>
-            <p className="text-muted-foreground">Learn flags from arouncscsd the world</p>
+            <p className="text-muted-foreground">Learn flags from around the world</p>
           </header>
           
           <main className="bg-card bg-opacity-90 backdrop-blur-sm rounded-lg border p-6">
